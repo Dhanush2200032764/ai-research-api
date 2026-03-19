@@ -1,11 +1,15 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
+import os
 
 app = FastAPI()
 
 class TextInput(BaseModel):
     text: str
+
+# Get API key from environment
+API_KEY = os.getenv("API_KEY")
 
 @app.get("/")
 def home():
@@ -15,11 +19,10 @@ def home():
 def summarize(data: TextInput):
     text = data.text
 
-    # Replace with your Groq/OpenAI API
     response = requests.post(
         "https://api.groq.com/openai/v1/chat/completions",
         headers={
-            "Authorization": "Bearer YOUR_API_KEY",
+            "Authorization": f"Bearer {API_KEY}",
             "Content-Type": "application/json"
         },
         json={
